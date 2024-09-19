@@ -1,0 +1,39 @@
+﻿<Window x:Class="InkCostCalculatorL501EnhancedWPF.CalibrateUnwinderDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:InkCostCalculatorL501EnhancedWPF"
+        mc:Ignorable="d"
+        Title="CalibrateUnwinderDialog" Height="285" Width="450">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="MinWidth" Value="82"/>
+            <Setter Property="MinHeight" Value="26"/>
+        </Style>
+    </Window.Resources>
+    <DockPanel Margin="10">
+        <Grid DockPanel.Dock="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <DockPanel Grid.Column="0">
+                <Label Content="1. Install empty core onto unwinder" DockPanel.Dock="Top"/>
+                <Label Content="2. Tighten unwinder" DockPanel.Dock="Top"/>
+                <Label Content="3. Click Calibrate" DockPanel.Dock="Top"/>
+            </DockPanel>
+            <Image Source="Resources/unwinder.png" Grid.Column="1"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Button Name="CalibrateButton" Content="Calibrate" Grid.Column="1" VerticalAlignment="Bottom" Margin="0,0,40,0" Click="CalibrateButton_Click"/>
+            <Button Name="CancelButton" Content="Cancel" Grid.Column="2" VerticalAlignment="Bottom" IsCancel="True"/>
+        </Grid>
+    </DockPanel>
+</Window>

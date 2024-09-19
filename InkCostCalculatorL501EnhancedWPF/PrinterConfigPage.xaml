@@ -1,0 +1,13 @@
+﻿<Window x:Class="InkCostCalculatorL501EnhancedWPF.PrinterConfigPage"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Printer Configuration" ResizeMode="NoResize" Height="261.316" Width="794.316">
+    <Grid Height="190" Width="708">
+        <TextBox Name="PathToOutputTextBox" Height="20" Width="654" TabIndex="13" Margin="11,58,43,112" HorizontalAlignment="Right" VerticalAlignment="Bottom" TextWrapping="Wrap" Text="{Binding PathToOutput}"/>
+        <Label Name="PathToOutputLabel" Height="22" Width="73" FontSize="11" FontFamily="Microsoft Sans Serif" TabIndex="12" Margin="21,42,614,126" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Output Path</Label>
+        <Label Name="PrintersLabel" Height="22" Width="51" FontSize="11" FontFamily="Microsoft Sans Serif" TabIndex="3" Margin="21,-4,636,172" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Printers</Label>
+        <ComboBox Name="PrintersComboBox" Height="21" Width="654" TabIndex="2" Margin="11,15,43,154" HorizontalAlignment="Right" VerticalAlignment="Bottom" ItemsSource="{Binding Path=PrinterEntries}" DisplayMemberPath="Name" SelectedValuePath="Name" SelectedValue="{Binding Path=PrinterEntry}" />
+        <Button Name="CancelDialogButton" Height="23" Width="75" TabIndex="1" Click="CancelDialogButton_Click" Margin="0,0,277,51" HorizontalAlignment="Right" VerticalAlignment="Bottom" >Cancel</Button>
+        <Button Name="SaveButton" Height="23" Width="75" TabIndex="0" Click="SaveButton_Click" Margin="0,0,359,51" HorizontalAlignment="Right" VerticalAlignment="Bottom" RenderTransformOrigin="1.859,0.794" >Save</Button>
+    </Grid>
+</Window>

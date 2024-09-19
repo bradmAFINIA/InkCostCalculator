@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+*.zip
+/packages
+/PrinterCommandExecute/bin
+.vs/InkCostCalculator/FileContentIndex/87d1e14d-473d-4263-b8e4-894b072b3c8a.vsidx

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!---->
+<ompdyn:Mech xmlns:ompdyn="http://www.hp.com/schemas/imaging/con/ledm/oemsimediapathdyn/2008/03/21" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.hp.com/schemas/imaging/con/ledm/oemsimediapathdyn/2008/03/21 ../../schemas/OemsiMediapathDyn.xsd">
+	<ompdyn:MechState>
+		<ompdyn:MechStatus>configuring</ompdyn:MechStatus>
+	</ompdyn:MechState>
+	<ompdyn:MechInput>
+		<ompdyn:SequenceId>1</ompdyn:SequenceId>
+		<ompdyn:MechInput0>9600</ompdyn:MechInput0>
+		<ompdyn:MechInput1>0</ompdyn:MechInput1>
+		<ompdyn:MechInput2>0</ompdyn:MechInput2>
+		<ompdyn:MechInput3>0</ompdyn:MechInput3>
+		<ompdyn:MechInput4>0</ompdyn:MechInput4>
+	</ompdyn:MechInput>
+</ompdyn:Mech>

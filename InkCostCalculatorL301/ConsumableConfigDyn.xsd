@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dd2="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" xmlns:dd="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/" xmlns:ccdyn="http://www.hp.com/schemas/imaging/con/ledm/consumableconfigdyn/2007/11/19" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/ledm/consumableconfigdyn/2007/11/19" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/" />
+  <xs:import namespace="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" />
+  <xs:element name="ConsumableConfigDyn">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:Version" />
+        <xs:element name="ProductConsumableInfo">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:NumOfUserReplaceableConsumables" />
+              <xs:element ref="dd:NumOfNonUserReplaceableConsumables" />
+              <xs:element ref="dd:AlignmentMode" />
+              <xs:element name="CartridgeChipInfo" type="xs:string" />
+              <xs:element ref="dd:ConsumableSlotDirection" />
+              <xs:element ref="dd:IK" />
+              <xs:element name="SingleCartridgeMode" type="xs:string" />
+              <xs:element ref="dd:StoreUsageData" />
+              <xs:element ref="dd:AntiTheftMode" />
+              <xs:element name="RewardsRegistrationStatus">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:OptedIn" />
+                    <xs:element ref="dd:AutoSendData" />
+                    <xs:element ref="dd:PromptAutoSendData" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element maxOccurs="unbounded" name="ConsumableInfo">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:Capacity" />
+              <xs:element name="ConsumableSubBrand" type="xs:string" />
+              <xs:element name="ConsumableSegmentClass" type="xs:string" />
+              <xs:element ref="dd:ConsumableAcceptibilityUpgradability" />
+              <xs:element ref="dd:ConsumableContentType" />
+              <xs:element ref="dd:ConsumableFamilyName" />
+              <xs:element ref="dd2:ConsumableID" />
+              <xs:element ref="dd:ConsumableKeyingDescriptor" />
+              <xs:element ref="dd:ConsumableLabelCode" />
+              <xs:element ref="dd:ConsumableLifeState" />
+              <xs:element ref="dd:ConsumableStateAvailableActions" />
+              <xs:element ref="dd:ConsumableLevelMessagingStyle" />
+              <xs:element name="ConsumableLowUseAlgorithm" type="xs:string" />
+              <xs:element ref="dd:ConsumablePercentageLevelRemaining" />
+              <xs:element ref="dd:ConsumableReplaceabilityType" />
+              <xs:element ref="dd:ConsumableSelectibilityNumber" />
+              <xs:element ref="dd:ConsumableStation" />
+              <xs:element ref="dd:ConsumableTypeEnum" />
+              <xs:element ref="dd:RegionalCartridge" />
+              <xs:element ref="dd:ConsumableIcon" />
+              <xs:element name="ConsumableUniqueID" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema><?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Version">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Revision" type="xs:string" />
+        <xs:element name="Date" type="xs:date" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NumOfUserReplaceableConsumables" type="xs:unsignedByte" />
+  <xs:element name="NumOfNonUserReplaceableConsumables" type="xs:unsignedByte" />
+  <xs:element name="AlignmentMode" type="xs:string" />
+  <xs:element name="ConsumableSlotDirection" type="xs:string" />
+  <xs:element name="IK" type="xs:unsignedByte" />
+  <xs:element name="StoreUsageData" type="xs:string" />
+  <xs:element name="AntiTheftMode" type="xs:string" />
+  <xs:element name="OptedIn" type="xs:boolean" />
+  <xs:element name="AutoSendData" type="xs:boolean" />
+  <xs:element name="PromptAutoSendData" type="xs:boolean" />
+  <xs:element name="Capacity">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MaxCapacity" type="xs:unsignedByte" />
+        <xs:element name="Unit" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConsumableAcceptibilityUpgradability" type="xs:string" />
+  <xs:element name="ConsumableContentType" type="xs:string" />
+  <xs:element name="ConsumableFamilyName" type="xs:string" />
+  <xs:element name="ConsumableKeyingDescriptor" type="xs:string" />
+  <xs:element name="ConsumableLabelCode" type="xs:string" />
+  <xs:element name="ConsumableLifeState">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ConsumableState" type="xs:string" />
+        <xs:element name="MeasuredQuantityState" type="xs:string" />
+        <xs:element name="Brand" type="xs:string" />
+        <xs:element name="IsRefilled" type="xs:boolean" />
+        <xs:element name="IsSETUP" type="xs:boolean" />
+        <xs:element name="IsTrial" type="xs:boolean" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConsumableStateAvailableActions">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ConsumableState" type="xs:string" />
+        <xs:element name="SupportedActions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="ConsumableStateAction" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="DefaultAction" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConsumableLevelMessagingStyle" type="xs:string" />
+  <xs:element name="ConsumablePercentageLevelRemaining" type="xs:unsignedByte" />
+  <xs:element name="ConsumableReplaceabilityType" type="xs:string" />
+  <xs:element name="ConsumableSelectibilityNumber" type="xs:string" />
+  <xs:element name="ConsumableStation" type="xs:unsignedByte" />
+  <xs:element name="ConsumableTypeEnum" type="xs:string" />
+  <xs:element name="RegionalCartridge">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="RegionIdentifier" type="xs:unsignedByte" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ConsumableIcon">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Shape" type="xs:string" />
+        <xs:element name="Rotation" type="xs:string" />
+        <xs:element name="FillColor">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Red" type="xs:unsignedByte" />
+              <xs:element name="Green" type="xs:unsignedByte" />
+              <xs:element name="Blue" type="xs:unsignedByte" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="OutlineColor">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Red" type="xs:unsignedByte" />
+              <xs:element name="Green" type="xs:unsignedByte" />
+              <xs:element name="Blue" type="xs:unsignedByte" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="BackGroundColor">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Red" type="xs:unsignedByte" />
+              <xs:element name="Green" type="xs:unsignedByte" />
+              <xs:element name="Blue" type="xs:unsignedByte" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema><?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="ConsumableID" type="xs:string" />
+</xs:schema>

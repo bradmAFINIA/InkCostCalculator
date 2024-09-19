@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dd2="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" xmlns:dd="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" xmlns:pudyn="http://www.hp.com/schemas/imaging/con/ledm/productusagedyn/2007/12/11" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/ledm/productusagedyn/2007/12/11" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" />
+  <xs:import namespace="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" />
+  <xs:element name="ProductUsageDyn">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="dd:Version" />
+        <xs:element name="PrinterSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:TotalImpressions" />
+              <xs:element ref="dd:DuplexSheets" />
+              <xs:element ref="dd:JamEvents" />
+              <xs:element ref="dd:MispickEvents" />
+              <xs:element name="UsageByMarkingAgent">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd2:CumulativeMarkingAgentUsed" />
+                    <xs:element ref="dd2:CumulativeHPMarkingAgentUsed" />
+                    <xs:element ref="dd:CumulativeHPMarkingAgentInserted" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" name="UsageByMedia">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:TotalImpressions" />
+                    <xs:element ref="dd:MediaSizeName" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" name="UsageByMediaType">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:TotalImpressions" />
+                    <xs:element maxOccurs="unbounded" ref="dd:UsageByJobSize" />
+                    <xs:element ref="dd:UsageByQuality" />
+                    <xs:element ref="dd:MediaType" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" ref="dd:UsageByTimeInterval" />
+              <xs:element name="UIButtonPressCounters">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:ButtonPressCount" />
+                    <xs:element ref="dd:ButtonPressOptions" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element ref="dd:EWSAccessCount" />
+              <xs:element ref="dd:NetworkImpressions" />
+              <xs:element ref="dd:WirelessNetworkImpressions" />
+              <xs:element name="WirelessConfigUserSelectedOption">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="QuietModeImpressions">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="TotalImpressions">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:unsignedInt">
+                            <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ConsumableSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="Consumable">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:MarkerColor" />
+                    <xs:element ref="dd:ConsumableTypeEnum" />
+                    <xs:element ref="dd2:CumulativeConsumableCount" />
+                    <xs:element ref="dd2:CumulativeMarkingAgentUsed" />
+                    <xs:element ref="dd:ConsumableRawPercentageLevelRemaining" />
+                    <xs:element maxOccurs="unbounded" ref="dd:PVPCartridgeCounter" />
+                    <xs:element maxOccurs="unbounded" ref="dd:UsageByMarkingAgentCount" />
+                    <xs:element maxOccurs="unbounded" ref="dd:UsageByPenStall" />
+                    <xs:element ref="dd:RefilledCount" />
+                    <xs:element ref="dd:PenInsertionTriggerSnapshotCounter" />
+                    <xs:element ref="dd2:CumulativeHPMarkingAgentUsed" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ScannerEngineSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:ScanImages" />
+              <xs:element maxOccurs="unbounded" name="UsageByScanMediaSize">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:ScanImages" />
+                    <xs:element ref="dd:ScanMediaSize" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element ref="dd:FlatbedImages" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="CopyApplicationSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:TotalImpressions" />
+              <xs:element ref="dd:ColorImpressions" />
+              <xs:element ref="dd:MonochromeImpressions" />
+              <xs:element ref="dd:AdfImages" />
+              <xs:element ref="dd:FlatbedImages" />
+              <xs:element name="UsageByMedia">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element ref="dd:TotalImpressions" />
+                    <xs:element ref="dd:MediaSizeName" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="TotalAdfLegallmages">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedInt">
+                      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ScanApplicationSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:AdfImages" />
+              <xs:element ref="dd:FlatbedImages" />
+              <xs:element ref="dd:ScanToHostImages" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PrintApplicationSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element ref="dd:TotalImpressions" />
+              <xs:element ref="dd:PhotoImpressions" />
+              <xs:element ref="dd:MediaSize_4x6in_10x15cm_Impressions" />
+              <xs:element ref="dd:CloudPrintImpressions" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PonyExpressSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="PECounter">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedInt">
+                      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="MobileApplicationSubunit">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element maxOccurs="unbounded" name="TotalUsage">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Counter">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="TotalImpressions">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:unsignedInt">
+                                  <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="RemoteDeviceType" type="xs:string" />
+                    <xs:element minOccurs="0" name="DriverType" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" name="DocumentUsage">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Counter">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="TotalImpressions">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:unsignedInt">
+                                  <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="RemoteDeviceType" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element maxOccurs="unbounded" name="PhotoUsage">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Counter">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="TotalImpressions">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:unsignedInt">
+                                  <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="RemoteDeviceType" type="xs:string" />
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema><?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Version">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Revision" type="xs:string" />
+        <xs:element name="Date" type="xs:date" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TotalImpressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="optional" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="DuplexSheets">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JamEvents">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MispickEvents" type="xs:unsignedInt" />
+  <xs:element name="ValueFloat" type="xs:unsignedInt" />
+  <xs:element name="Unit" type="xs:string" />
+  <xs:element name="CumulativeHPMarkingAgentInserted">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="ValueFloat" type="xs:unsignedInt" />
+        <xs:element name="Unit" type="xs:string" />
+      </xs:sequence>
+      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MediaSizeName" type="xs:string" />
+  <xs:element name="UsageByJobSize">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="TotalImpressions">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PagesPerJob" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsageByQuality">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="NormalImpressions">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element minOccurs="0" name="DraftImpressions">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="BetterImpressions">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MediaType" type="xs:string" />
+  <xs:element name="UsageByTimeInterval">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="JobCount">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="JobDuration" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ButtonPressCount">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ButtonPressOptions" type="xs:string" />
+  <xs:element name="EWSAccessCount">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="NetworkImpressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="WirelessNetworkImpressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MarkerColor" type="xs:string" />
+  <xs:element name="ConsumableTypeEnum" type="xs:string" />
+  <xs:element name="ConsumableRawPercentageLevelRemaining" type="xs:unsignedInt" />
+  <xs:element name="PVPCartridgeCounter">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsageByMarkingAgentCount">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MarkingAgentCount">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="MarkingAgentCountType" type="xs:string" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="UsageByPenStall">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" name="PenStall">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="PenStallValue">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:unsignedInt">
+                      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="PenStallValueLocation" type="xs:string" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="TijGenAndVersion">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="NonHPFlagCounter">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PenStallNumber" type="xs:unsignedInt" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RefilledCount">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="CounterfeitRefilledCount">
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:unsignedInt">
+                <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="GenuineRefilledCount" type="xs:unsignedInt" />
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PenInsertionTriggerSnapshotCounter">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ScanImages">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ScanMediaSize" type="xs:string" />
+  <xs:element name="FlatbedImages" type="xs:unsignedInt" />
+  <xs:element name="ColorImpressions" type="xs:unsignedInt" />
+  <xs:element name="MonochromeImpressions" type="xs:unsignedInt" />
+  <xs:element name="AdfImages" type="xs:unsignedInt" />
+  <xs:element name="ScanToHostImages">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PhotoImpressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MediaSize_4x6in_10x15cm_Impressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CloudPrintImpressions">
+    <xs:complexType>
+      <xs:simpleContent>
+        <xs:extension base="xs:unsignedInt">
+          <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+        </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema><?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://www.hp.com/schemas/imaging/con/dictionaries/2008/10/10" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" />
+  <xs:element name="CumulativeMarkingAgentUsed">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q1="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" ref="q1:ValueFloat" />
+        <xs:element xmlns:q2="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" ref="q2:Unit" />
+      </xs:sequence>
+      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CumulativeHPMarkingAgentUsed">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element xmlns:q3="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" ref="q3:ValueFloat" />
+        <xs:element xmlns:q4="http://www.hp.com/schemas/imaging/con/dictionaries/1.0/:Version" ref="q4:Unit" />
+      </xs:sequence>
+      <xs:attribute name="PEID" type="xs:unsignedInt" use="required" />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CumulativeConsumableCount" type="xs:unsignedInt" />
+</xs:schema>

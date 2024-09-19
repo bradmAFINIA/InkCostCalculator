@@ -1,0 +1,52 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\work\\InkCostCalculator\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{80A7F3CF-D90B-476B-B01B-0AE3A73CEB5E}|InkCostCalculatorL501EnhancedWPF\\InkCostCalculatorL501EnhancedWPF.csproj|d:\\work\\inkcostcalculator\\inkcostcalculatorl501enhancedwpf\\inkcosthomepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{80A7F3CF-D90B-476B-B01B-0AE3A73CEB5E}|InkCostCalculatorL501EnhancedWPF\\InkCostCalculatorL501EnhancedWPF.csproj|solutionrelative:inkcostcalculatorl501enhancedwpf\\inkcosthomepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{80A7F3CF-D90B-476B-B01B-0AE3A73CEB5E}|InkCostCalculatorL501EnhancedWPF\\InkCostCalculatorL501EnhancedWPF.csproj|d:\\work\\inkcostcalculator\\inkcostcalculatorl501enhancedwpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{80A7F3CF-D90B-476B-B01B-0AE3A73CEB5E}|InkCostCalculatorL501EnhancedWPF\\InkCostCalculatorL501EnhancedWPF.csproj|solutionrelative:inkcostcalculatorl501enhancedwpf\\mainwindow.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "InkCostHomePage.xaml",
+              "DocumentMoniker": "D:\\work\\InkCostCalculator\\InkCostCalculatorL501EnhancedWPF\\InkCostHomePage.xaml",
+              "RelativeDocumentMoniker": "InkCostCalculatorL501EnhancedWPF\\InkCostHomePage.xaml",
+              "ToolTip": "D:\\work\\InkCostCalculator\\InkCostCalculatorL501EnhancedWPF\\InkCostHomePage.xaml",
+              "RelativeToolTip": "InkCostCalculatorL501EnhancedWPF\\InkCostHomePage.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-09-19T13:16:11.371Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "MainWindow.xaml",
+              "DocumentMoniker": "D:\\work\\InkCostCalculator\\InkCostCalculatorL501EnhancedWPF\\MainWindow.xaml",
+              "RelativeDocumentMoniker": "InkCostCalculatorL501EnhancedWPF\\MainWindow.xaml",
+              "ToolTip": "D:\\work\\InkCostCalculator\\InkCostCalculatorL501EnhancedWPF\\MainWindow.xaml",
+              "RelativeToolTip": "InkCostCalculatorL501EnhancedWPF\\MainWindow.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-09-19T13:16:03.759Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

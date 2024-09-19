@@ -1,0 +1,51 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="InkCostCalculator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="Color_ml" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">22.5</Value>
+    </Setting>
+    <Setting Name="Black_ml" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">29.1</Value>
+    </Setting>
+    <Setting Name="ColorConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ColorConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">256</Value>
+    </Setting>
+    <Setting Name="ColorConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="BlackConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="BlackConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">256</Value>
+    </Setting>
+    <Setting Name="BlackConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="JobFileHeader" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Printer,Print Job,Label Color Cost,Total Color Cost,Number of Color Labels,Color ml Used,Label Black Cost,Total Black Cost,Number of Black Label,Black ml Used</Value>
+    </Setting>
+    <Setting Name="ProductUsageDyn" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/DevMgmt/ProductUsageDyn.xml</Value>
+    </Setting>
+    <Setting Name="ConsumabeConfigDyn" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/DevMgmt/ConsumableConfigDyn.xml</Value>
+    </Setting>
+    <Setting Name="SWFWClientPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\temp\</Value>
+    </Setting>
+    <Setting Name="Use388" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableCaptureLast" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IdleMilliSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

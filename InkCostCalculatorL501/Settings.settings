@@ -1,0 +1,57 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="InkCostCalculator.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ColorCartridgeCost" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">49</Value>
+    </Setting>
+    <Setting Name="BlackCartridgeCost" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">49</Value>
+    </Setting>
+    <Setting Name="Color_ml" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">22.5</Value>
+    </Setting>
+    <Setting Name="Black_ml" Type="System.Double" Scope="User">
+      <Value Profile="(Default)">29.1</Value>
+    </Setting>
+    <Setting Name="ColorConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">8</Value>
+    </Setting>
+    <Setting Name="ColorConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">256</Value>
+    </Setting>
+    <Setting Name="ColorConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="BlackConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">22</Value>
+    </Setting>
+    <Setting Name="BlackConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">256</Value>
+    </Setting>
+    <Setting Name="BlackConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="InkLevelsPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\temp\inklevels.xml</Value>
+    </Setting>
+    <Setting Name="ProductUsageDynPath_xml" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\temp\ProductUsageDyn.xml</Value>
+    </Setting>
+    <Setting Name="ConsumableConfigDynPath_xml" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\temp\ConsumableConfigDyn.xml</Value>
+    </Setting>
+    <Setting Name="ConsumableConfigDyn_get_bat" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Terry\Documents\Visual Studio 2015\Projects\InkCostCalculator\InkCostCalculator\bin\Debug\ConsumableConfigDyn_get.bat</Value>
+    </Setting>
+    <Setting Name="ProductUsageDyn_get_afinia_bat" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Users\Terry\Documents\Visual Studio 2015\Projects\InkCostCalculator\InkCostCalculator\bin\Debug\ProductUsageDyn_get_afinia.bat</Value>
+    </Setting>
+    <Setting Name="JobFilePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\temp\jobs.csv</Value>
+    </Setting>
+    <Setting Name="JobFileHeader" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Label Color Cost,Total Color Cost,Number of Color Labels,Color ml Used,Label Black Cost,Total Black Cost,Number of Black Label,Black ml Used</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

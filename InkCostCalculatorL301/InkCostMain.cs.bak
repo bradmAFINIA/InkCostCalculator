@@ -1,0 +1,753 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Configuration;
+using System.Data;
+using System.Diagnostics;
+using System.Drawing;
+using System.IO;
+using System.Linq;
+using System.Printing;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
+using System.Xml.Serialization;
+using Monitors;
+
+namespace InkCostCalculator
+{
+    public partial class InkCostMain : Form
+    {
+        public List<Cost> jobs = new List<Cost>();
+        public string outputFilePath = string.Empty;
+        public string selectedPrinter = string.Empty;
+
+        //PrintQueueMonitor pqm = null;
+        //PrintServer ps = null;
+        //PrintQueue pq = null;
+        public InkCostMain()
+        {
+            InitializeComponent();
+            Logger("Starting");
+
+            Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+            ColorInkCartridgeCostTextBox.Text = config.AppSettings.Settings["ColorCartridgeCost"].Value;
+            BlackInkCartridgeCostTextBox.Text = config.AppSettings.Settings["BlackCartridgeCost"].Value;
+            outputFilePath = config.AppSettings.Settings["OutputFilePath"].Value;
+            selectedPrinter = config.AppSettings.Settings["SelectedPrinter"].Value;
+            string inkLevelsPath = Path.GetDirectoryName($"{outputFilePath}inklevels.xml");
+            if (!Directory.Exists(inkLevelsPath))
+                Directory.CreateDirectory(inkLevelsPath);
+
+            ColorCartridgeMlTextBox.Text = Properties.Settings.Default.Color_ml.ToString();
+            BlackCartridgeMlTextBox.Text = Properties.Settings.Default.Black_ml.ToString();
+
+            //pqm = new PrintQueueMonitor(Properties.Settings.Default.SelectedPrinter.Trim());
+            //pqm.OnJobStatusChange += new PrintJobStatusChanged(pqm_OnJobStatusChange);
+            //pqm.Start();
+            //ps = new PrintServer();
+            //pq = ps.GetPrintQueue(Properties.Settings.Default.SelectedPrinter.Trim());
+        }
+
+        //void pqm_OnJobStatusChange(object Sender, PrintJobChangeEventArgs e)
+        //{
+        //    this.Invoke((MethodInvoker)delegate
+        //   {
+        //       if (e.JobStatus == API.PrintSpool.JOBSTATUS.JOB_STATUS_SPOOLING)
+        //       {
+        //           PrintSystemJobInfo ji = pq.GetJob(e.JobID);
+        //           ji.Pause();
+        //           CaptureButton_Click(null, null);
+        //           ji.Resume();
+        //       }
+        //       else if (e.JobStatus == API.PrintSpool.JOBSTATUS.JOB_STATUS_COMPLETE)
+        //       {
+        //            //PrintSystemJobInfo ji = pq.GetJob(e.JobID);
+        //            CaptureButton_Click(null, null);
+        //            CalculateButton_Click(null, null);
+        //       }
+        //   });
+        //    //MethodInvoker invoker = () =>
+        //    //{
+        //    //    if (e.JobStatus == API.PrintSpool.JOBSTATUS.JOB_STATUS_SPOOLING)
+        //    //    {
+        //    //        PrintSystemJobInfo ji = pq.GetJob(e.JobID);
+        //    //        ji.Pause();
+        //    //        CaptureButton_Click(null, null);
+        //    //        ji.Resume();
+        //    //    }
+        //    //    else if (e.JobStatus == API.PrintSpool.JOBSTATUS.JOB_STATUS_COMPLETE)
+        //    //    {
+        //    //        //PrintSystemJobInfo ji = pq.GetJob(e.JobID);
+        //    //        CaptureButton_Click(null, null);
+        //    //        CalculateButton_Click(null, null);
+        //    //    }
+        //    //    //string doNothing = string.Empty;
+        //    //};
+        //    //Invoke(invoker);
+
+        //}
+
+        private void InkCostMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            //try
+            //{
+            //    pq.Dispose();
+            //}
+            //catch { }
+            //try
+            //{
+            //    ps.Dispose();
+            //}
+            //catch { }
+            //try
+            //{
+            //    pqm.Stop();
+            //    pqm = null;
+            //}
+            //catch { }
+        }
+
+        public void Logger(string lines)
+        {
+            using (StreamWriter file = new StreamWriter("log.txt", true))
+            {
+                file.WriteLine(lines);
+                file.Close();
+            }
+        }
+
+        private void ExportJobListButton_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (StreamWriter file = new StreamWriter($"{outputFilePath}jobs.csv", false))
+                {
+                    file.WriteLine(Properties.Settings.Default.JobFileHeader);
+                    foreach (Cost job in jobs)
+                    {
+                        file.WriteLine($"{job.LabelCostOfColor.ToString("0.#####")},{job.TotalCostOfColor.ToString("0.#####")},{job.TotalColorLabels},{job.TotalColorMlUsed.ToString("0.#####")},{job.LabelCostOfBlack.ToString("0.#####")},{job.TotalCostOfBlack.ToString("0.#####")},{job.TotalBlackLabels},{job.TotalBlackMlUsed.ToString("0.#####")}");
+                    }
+                    file.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+
+        private void CaptureButton_Click(object sender, EventArgs e)
+        {
+            Logger($"Capturing at {DateTime.Now.ToString()}");
+            try
+            {
+                RunEXE(selectedPrinter, "ConsumableConfigDyn");
+                RunEXE(selectedPrinter, "ProductUsageDyn");
+                System.Threading.Thread.Sleep(1000);
+
+                if (File.Exists($"{outputFilePath}ConsumableConfigDyn.xml") && File.Exists($"{outputFilePath}ProductUsageDyn.xml"))
+                {
+                    List<ConsumableInfo> infoList = ProcessConsumableConfigDyn($"{outputFilePath}ConsumableConfigDyn.xml");
+
+                    ProductUsage productUse = ProcessProductUsageDyn($"{outputFilePath}ProductUsageDyn.xml");
+
+                    List<InkLevel> inkLevels = new List<InkLevel>();
+                    if (File.Exists($"{outputFilePath}inklevels.xml"))
+                        inkLevels = ReadFile($"{outputFilePath}inklevels.xml");
+                    else
+                        Logger("No Ink Level xml file or path exists");
+
+                    List<InkLevel> results = FillTable(infoList, productUse);
+
+                    foreach (var row in results)
+                    {
+                        inkLevels.Add(row);
+                    }
+                    WriteFile($"{outputFilePath}inklevels.xml", inkLevels);
+                }
+                else
+                    Logger("No Consumable Config or Product Usage xml file or path exists");
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+        private void CalculateButton_Click(object sender, EventArgs e)
+        {
+            Logger($"Calculating at {DateTime.Now.ToString()}");
+            try
+            {
+                if (File.Exists($"{outputFilePath}inklevels.xml"))
+                {
+                    List<InkLevel> inkLevels = ReadFile($"{outputFilePath}inklevels.xml");
+                    Cost cost = CalculateCost(inkLevels);
+                    ColorCostTextBox.Text = cost.TotalCostOfColor.ToString("0.#####");
+                    BlackCostTextBox.Text = cost.TotalCostOfBlack.ToString("0.#####");
+
+                    TotalLabelsTextBox.Text = cost.TotalColorLabels.ToString();
+
+                    
+                    //LabelCyanCostTextBox.Text = cost.LabelCostOfColor.ToString("0.#####");
+                    //LabelColorCostTextBox.Text = cost.LabelCostOfColor.ToString("0.#####");
+                    //LabelColorCostTextBox.Text = cost.LabelCostOfColor.ToString("0.#####");
+                    LabelColorCostTextBox.Text = cost.LabelCostOfColor.ToString("0.#####");
+                    LabelBlackCostTextBox.Text = cost.LabelCostOfBlack.ToString("0.#####");
+
+                    ColorMlTextBox.Text = cost.TotalColorMlUsed.ToString("0.#####");
+                    BlackMlTextBox.Text = cost.TotalBlackMlUsed.ToString("0.#####");
+
+                    if (cost.ColorPagesPerCartridge < cost.BlackPagesPerCartridge)
+                        ColorPagesPerCartridgeTextBox.Text = cost.ColorPagesPerCartridge.ToString("0.#");
+                    else
+                        ColorPagesPerCartridgeTextBox.Text = cost.BlackPagesPerCartridge.ToString("0.#");
+
+                    TotalCostTextBox.Text = (cost.TotalCostOfColor + cost.TotalCostOfBlack).ToString("0.#####");
+
+                    jobs.Add(cost);
+                    if (jobs.Count > 20)
+                    {
+                        jobs.RemoveAt(1);
+                    }
+                    PopulateJobListBox();
+                }
+                else
+                    Logger("No Ink Level xml file or path exists");
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+
+        public void RunEXE(string printer, string commandType)
+        {
+            ProcessStartInfo startInfo = new ProcessStartInfo($"{Properties.Settings.Default.SWFWClientPath}SWFWClient.exe");
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            startInfo.UseShellExecute = false;
+            startInfo.CreateNoWindow = true;
+            switch (commandType)
+            {
+                case "ProductUsageDyn":
+                    {
+                        startInfo.Arguments = $"\"{printer}\" get \"{Properties.Settings.Default.ProductUsageDyn}\" \"{outputFilePath}httpresponse.txt\" \"{outputFilePath}ProductUsageDyn.xml\"";
+                    }
+                    break;
+                case "ConsumableConfigDyn":
+                    {
+                        startInfo.Arguments = $"\"{printer}\" get \"{Properties.Settings.Default.ConsumabeConfigDyn}\" \"{outputFilePath}httpresponse.txt\" \"{outputFilePath}ConsumableConfigDyn.xml\"";
+                    }
+                    break;
+            }
+            Process process = Process.Start(startInfo);
+            while (!process.HasExited)
+            {
+                System.Threading.Thread.Sleep(100);
+            }
+        }
+
+        public Cost CalculateCost(List<InkLevel> inkLevels)
+        {
+            Cost cost = new Cost();
+
+            try
+            {
+                var inklevelsList = (from t in inkLevels
+                            orderby t.timestamp descending
+                            select t).Take(8).ToList();
+
+                var listTop = (from t in inklevelsList
+                               orderby t.timestamp descending, t.PEID
+                               select t).Take(4).ToList();
+
+                var listBottom = (from t in inklevelsList
+                                  orderby t.timestamp ascending, t.PEID
+                                  select t).Take(4).ToList();
+                List<InkLevel> SortedTopList = listTop.OrderBy(o => o.PEID).ToList();
+                List<InkLevel> SortedBottomList = listBottom.OrderBy(o => o.PEID).ToList();
+
+                PopulateListBox(SortedTopList, SortedBottomList);
+
+                double colorCartridgeCost = 0;// Properties.Settings.Default.ColorCartridgeCost;
+                double.TryParse(ColorInkCartridgeCostTextBox.Text, out colorCartridgeCost);
+
+                double colorMl = Properties.Settings.Default.Color_ml;
+                double.TryParse(ColorCartridgeMlTextBox.Text, out colorMl);
+
+                double CostPerMlColor = colorCartridgeCost / colorMl;
+
+                double blackCartridgeCost = 0;// Properties.Settings.Default.BlackCartridgeCost;
+                double.TryParse(BlackInkCartridgeCostTextBox.Text,out blackCartridgeCost);
+
+                double blackMl = Properties.Settings.Default.Black_ml;
+                double.TryParse(BlackCartridgeMlTextBox.Text, out blackMl);
+
+                double CostPerMlBlack = blackCartridgeCost / blackMl;
+
+                double cyanPlUse = (SortedTopList.ElementAt(1).Count - SortedBottomList.ElementAt(1).Count) * Properties.Settings.Default.ColorConst1 * Properties.Settings.Default.ColorConst2;
+                cost.TotalCyanMlUsed = (cyanPlUse * Properties.Settings.Default.ColorConst3);
+                double magentaPlUse = (SortedTopList.ElementAt(2).Count - SortedBottomList.ElementAt(2).Count) * Properties.Settings.Default.ColorConst1 * Properties.Settings.Default.ColorConst2;
+                cost.TotalMagentaMlUsed = (magentaPlUse * Properties.Settings.Default.ColorConst3);
+                double yellowPlUse = (SortedTopList.ElementAt(3).Count - SortedBottomList.ElementAt(3).Count) * Properties.Settings.Default.ColorConst1 * Properties.Settings.Default.ColorConst2;
+                cost.TotalYellowMlUsed = (yellowPlUse * Properties.Settings.Default.ColorConst3);
+                cost.TotalColorMlUsed = cost.TotalCyanMlUsed + cost.TotalMagentaMlUsed + cost.TotalYellowMlUsed;
+                cost.TotalCostOfCyan = cost.TotalCyanMlUsed * CostPerMlColor;
+                cost.TotalCostOfMagenta = cost.TotalMagentaMlUsed * CostPerMlColor;
+                cost.TotalCostOfYellow = cost.TotalYellowMlUsed * CostPerMlColor;
+                cost.TotalCostOfColor = cost.TotalColorMlUsed * CostPerMlColor;
+
+                double blackPlUse = (SortedTopList.ElementAt(0).Count - SortedBottomList.ElementAt(0).Count) * Properties.Settings.Default.BlackConst1 * Properties.Settings.Default.BlackConst2;
+                cost.TotalBlackMlUsed = (blackPlUse * Properties.Settings.Default.BlackConst3);
+                cost.TotalCostOfBlack = cost.TotalBlackMlUsed * CostPerMlBlack;
+
+                cost.TotalBlackLabels = SortedTopList.ElementAt(0).TotalImpressions - SortedBottomList.ElementAt(0).TotalImpressions;
+                if (cost.TotalBlackLabels < 1)
+                    cost.TotalBlackLabels = 1;
+                cost.LabelCostOfBlack = cost.TotalCostOfBlack / cost.TotalBlackLabels;
+                cost.TotalColorLabels = SortedTopList.ElementAt(1).TotalImpressions - SortedBottomList.ElementAt(1).TotalImpressions;
+                if (cost.TotalColorLabels < 1)
+                    cost.TotalColorLabels = 1;
+                cost.LabelCostOfColor = cost.TotalCostOfColor / cost.TotalColorLabels;
+
+                cost.PageCyanMlUsed = cost.TotalCyanMlUsed / cost.TotalColorLabels;
+                cost.PageMagentaMlUsed = cost.TotalMagentaMlUsed / cost.TotalColorLabels;
+                cost.PageYellowMlUsed = cost.TotalYellowMlUsed / cost.TotalColorLabels;
+                cost.PageColorMlUsed = cost.TotalColorMlUsed / cost.TotalColorLabels;
+                cost.PageBlackMlUsed = cost.TotalBlackMlUsed / cost.TotalBlackLabels;
+
+                cost.CyanPagesPerCartridge = (colorMl / 3) / cost.PageCyanMlUsed;
+                cost.MagentaPagesPerCartridge = (colorMl / 3) / cost.PageMagentaMlUsed;
+                cost.YellowPagesPerCartridge = (colorMl / 3) / cost.PageYellowMlUsed;
+
+                if ((cost.CyanPagesPerCartridge < cost.MagentaPagesPerCartridge) & (cost.CyanPagesPerCartridge < cost.YellowPagesPerCartridge))
+                {
+                    cost.ColorPagesPerCartridge = cost.CyanPagesPerCartridge;
+                }
+                else if ((cost.MagentaPagesPerCartridge < cost.CyanPagesPerCartridge) & (cost.MagentaPagesPerCartridge < cost.YellowPagesPerCartridge))
+                {
+                    cost.ColorPagesPerCartridge = cost.MagentaPagesPerCartridge;
+                }
+                else if ((cost.YellowPagesPerCartridge < cost.MagentaPagesPerCartridge) & (cost.YellowPagesPerCartridge < cost.CyanPagesPerCartridge))
+                {
+                    cost.ColorPagesPerCartridge = cost.YellowPagesPerCartridge;
+                }
+                //cost.ColorPagesPerCartridge = colorMl / cost.PageColorMlUsed;
+                cost.BlackPagesPerCartridge = blackMl / cost.PageBlackMlUsed;
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return cost;
+        }
+
+        public void PopulateJobListBox()
+        {
+            try
+            {
+                JobsListBox.Items.Clear();
+                JobsListBox.Items.Add(Properties.Settings.Default.JobFileHeader);
+                foreach (var job in jobs)
+                {
+                    JobsListBox.Items.Add($"{job.LabelCostOfColor.ToString("0.#####")},{job.TotalCostOfColor.ToString("0.#####")},{job.TotalColorLabels},{job.TotalColorMlUsed.ToString("0.#####")},{job.LabelCostOfBlack.ToString("0.#####")},{job.TotalCostOfBlack.ToString("0.#####")},{job.TotalBlackLabels},{job.TotalBlackMlUsed.ToString("0.#####")}");
+                }
+                JobsListBox.SelectedIndex = JobsListBox.Items.Count - 1;
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+
+        public void WriteFile(string path, List<InkLevel> results)
+        {
+            try
+            {
+                var xmlperson = ObjectToXMLGeneric<List<InkLevel>>(results);
+                XmlDocument xdoc = new XmlDocument();
+                xdoc.LoadXml(xmlperson);
+                xdoc.Save(path);
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+        public List<InkLevel> ReadFile(string path)
+        {
+            try
+            {
+                if (File.Exists($"{outputFilePath}inklevels.xml"))
+                {
+                    XmlDocument doc = new XmlDocument();
+                    doc.Load(path);
+                    string xmlcontents = doc.InnerXml;
+                    List<InkLevel> inkLevels = new List<InkLevel>();
+                    inkLevels = XMLToObject<List<InkLevel>>(xmlcontents);
+
+                    return inkLevels;
+                }
+                else
+                    Logger("No Ink Level xml file or path exists");
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return null;
+        }
+        public String ObjectToXMLGeneric<T>(T filter)
+        {
+            string xml = null;
+            try
+            {
+                using (StringWriter sw = new StringWriter())
+                {
+
+                    XmlSerializer xs = new XmlSerializer(typeof(T));
+                    xs.Serialize(sw, filter);
+                    try
+                    {
+                        xml = sw.ToString();
+
+                    }
+                    catch (Exception e)
+                    {
+                        Logger($"{e.Message}. {e.InnerException}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return xml;
+        }
+        public T XMLToObject<T>(string xml)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(T));
+
+                using (var textReader = new StringReader(xml))
+                {
+                    using (var xmlReader = XmlReader.Create(textReader))
+                    {
+                        return (T)serializer.Deserialize(xmlReader);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return default(T);
+        }
+        public void PopulateListBox(List<InkLevel> top, List<InkLevel> bottom)
+        {
+            try
+            {
+                RawListBox.Items.Clear();
+                RawListBox.Items.Add("Current Read");
+                foreach (var item in top)
+                {
+                    RawListBox.Items.Add($"{item.timestamp},{item.Id},{item.Color},{item.SelectabilityNumber},{item.TotalImpressions},{item.DuplexSheets},{item.JamEvents},{item.MispickEvents},{item.PEID},{item.Count},{item.Type}");
+                }
+                RawListBox.Items.Add("Previous Read");
+                foreach (var item in bottom)
+                {
+                    RawListBox.Items.Add($"{item.timestamp},{item.Id},{item.Color},{item.SelectabilityNumber},{item.TotalImpressions},{item.DuplexSheets},{item.JamEvents},{item.MispickEvents},{item.PEID},{item.Count},{item.Type}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+        }
+        public List<InkLevel> FillTable(List<ConsumableInfo> infoList, ProductUsage productUse)
+        {
+            try {
+                DataTable infoListTable = new DataTable("Info");
+                infoListTable.Columns.Add("Id", typeof(string));
+                infoListTable.Columns.Add("LabelCode", typeof(string));
+                infoListTable.Columns.Add("SelectabilityNumber", typeof(string));
+                DataTable consumableTable = new DataTable("Consumable");
+                consumableTable.Columns.Add("TotalImpressions", typeof(uint));
+                consumableTable.Columns.Add("DuplexSheets", typeof(uint));
+                consumableTable.Columns.Add("JamEvents", typeof(uint));
+                consumableTable.Columns.Add("MispickEvents", typeof(uint));
+                consumableTable.Columns.Add("Color", typeof(string));
+                consumableTable.Columns.Add("PEID", typeof(uint));
+                consumableTable.Columns.Add("Count", typeof(uint));
+                consumableTable.Columns.Add("Type", typeof(string));
+
+                foreach (var consumable in productUse.Consumables)
+                {
+                    foreach (var agent in consumable.Agent)
+                    {
+                        consumableTable.Rows.Add(productUse.TotalImpressions, productUse.DuplexSheets, productUse.JamEvents, productUse.MispickEvents, consumable.MarkerColor, agent.PEID, agent.Count, agent.Type);
+                    }
+                }
+
+                foreach (var item in infoList)
+                {
+                    string color = string.Empty;
+                    if (item.LabelCode == "K")
+                        color = "Black";
+                    else
+                        color = "CyanMagentaYellow";
+                    infoListTable.Rows.Add(item.ID, color, item.SelectabilityNumber);
+                }
+
+                //var result = from a in consumableTable.AsEnumerable()
+                //             join c in infoListTable.AsEnumerable()/*.Where(s => s.LabelCode == a.Color)*/
+                //             on a.Field<string>("Color") equals c.Field<string>("LabelCode")
+                //             select new InkLevel()
+                //             {
+                //                 Id = c.Field<string>("Id"),
+                //                 LabelCode = c.Field<string>("LabelCode"),
+                //                 SelectabilityNumber = c.Field<string>("SelectabilityNumber"),
+                //                 TotalImpressions = a.Field<uint>("TotalImpressions"),
+                //                 DuplexSheets = a.Field<uint>("DuplexSheets"),
+                //                 JamEvents = a.Field<uint>("JamEvents"),
+                //                 MispickEvents = a.Field<uint>("MispickEvents"),
+                //                 Color = a.Field<string>("Color"),
+                //                 PEID = a.Field<uint>("PEID"),
+                //                 Count = a.Field<uint>("Count"),
+                //                 Type = a.Field<string>("Type"),
+                //                 timestamp = DateTime.Now
+                //             };
+                var result = from a in consumableTable.AsEnumerable()
+                             select new InkLevel()
+                             {
+                                 //Id = c.Field<string>("Id"),
+                                 //LabelCode = c.Field<string>("LabelCode"),
+                                 //SelectabilityNumber = c.Field<string>("SelectabilityNumber"),
+                                 TotalImpressions = a.Field<uint>("TotalImpressions"),
+                                 DuplexSheets = a.Field<uint>("DuplexSheets"),
+                                 JamEvents = a.Field<uint>("JamEvents"),
+                                 MispickEvents = a.Field<uint>("MispickEvents"),
+                                 Color = a.Field<string>("Color"),
+                                 PEID = a.Field<uint>("PEID"),
+                                 Count = a.Field<uint>("Count"),
+                                 Type = a.Field<string>("Type"),
+                                 timestamp = DateTime.Now
+                             };
+                return result.ToList();
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return null;
+        }
+        public ProductUsage ProcessProductUsageDyn(string filepathProductUsageDyn)
+        {
+            try
+            {
+                ProductUsageDyn usage;
+                var serializer = new XmlSerializer(typeof(ProductUsageDyn));
+                using (var reader = XmlReader.Create(filepathProductUsageDyn))
+                {
+                    usage = (ProductUsageDyn)serializer.Deserialize(reader);
+                }
+                ProductUsage productUsage = new ProductUsage();
+                productUsage.TotalImpressions = usage.PrintApplicationSubunit.TotalImpressions.Value;
+                productUsage.DuplexSheets = usage.PrinterSubunit.DuplexSheets.Value;
+                productUsage.JamEvents = usage.PrinterSubunit.JamEvents.Value;
+                productUsage.MispickEvents = usage.PrinterSubunit.MispickEvents;
+                //productUsage.
+                productUsage.Consumables = new List<ConsumableSubUnit>();
+
+                foreach (var consumableSubunit in usage.ConsumableSubunit)
+                {
+                    ConsumableSubUnit consumable = new ConsumableSubUnit();
+                    consumable.MarkerColor = consumableSubunit.MarkerColor;
+                    consumable.Agent = new List<MarkingAgent>();
+                    foreach (var markingAgentCount in consumableSubunit.UsageByMarkingAgentCount)
+                    {
+                        MarkingAgent agent = new MarkingAgent();
+                        if (markingAgentCount.MarkingAgentCountType == "HPDropsCount")
+                        {
+                            agent.PEID = markingAgentCount.MarkingAgentCount.PEID;
+                            agent.Count = markingAgentCount.MarkingAgentCount.Value;
+                            agent.Type = markingAgentCount.MarkingAgentCountType;
+                        }
+                        if (agent.Type != null)
+                        {
+                            if (!consumable.Agent.Any(a => a.PEID == agent.PEID))
+                                consumable.Agent.Add(agent);
+                        }
+                    }
+                    productUsage.Consumables.Add(consumable);
+                }
+                return productUsage;
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return null;
+        }
+        public List<ConsumableInfo> ProcessConsumableConfigDyn(string filepathConsumableConfigDyn)
+        {
+            try
+            {
+                List<ConsumableInfo> infoList = new List<ConsumableInfo>();
+                //ConsumableConfigDyn consumableConfig;
+                //var serializer1 = new XmlSerializer(typeof(ConsumableConfigDyn));
+                //using (var reader = XmlReader.Create(filepathConsumableConfigDyn))
+                //{
+                //    consumableConfig = (ConsumableConfigDyn)serializer1.Deserialize(reader);
+                //}
+                //foreach (var consumableInfo in consumableConfig.ConsumableInfo)
+                //{
+                //    ConsumableInfo info = new ConsumableInfo { ID = consumableInfo.ConsumableID, LabelCode = consumableInfo.ConsumableLabelCode, SelectabilityNumber = "" /*consumableInfo..ConsumableSelectibilityNumber*/ };
+                //    infoList.Add(info);
+                //}
+
+                return infoList;
+            }
+            catch (Exception ex)
+            {
+                Logger($"{ex.Message}. {ex.InnerException}");
+            }
+            return null;
+        }
+
+        public class Cost
+        {
+            public double TotalCostOfCyan { get; set; }
+            public double TotalCostOfMagenta { get; set; }
+            public double TotalCostOfYellow { get; set; }
+            public double TotalCostOfColor { get; set; }
+            public double TotalCostOfBlack { get; set; }
+            public double LabelCostOfCyan { get; set; }
+            public double LabelCostOfMagenta { get; set; }
+            public double LabelCostOfYellow { get; set; }
+            public double LabelCostOfColor { get; set; }
+            public double LabelCostOfBlack { get; set; }
+            public double TotalBlackLabels { get; set; }
+            public double TotalCyanLabels { get; set; }
+            public double TotalMagentaLabels { get; set; }
+            public double TotalYellowLabels { get; set; }
+            public double TotalColorLabels { get; set; }
+            public double TotalCyanMlUsed { get; set; }
+            public double TotalMagentaMlUsed { get; set; }
+            public double TotalYellowMlUsed { get; set; }
+            public double TotalColorMlUsed { get; set; }
+            public double TotalBlackMlUsed { get; set; }
+            public double PageColorMlUsed { get; set; }
+            public double PageCyanMlUsed { get; set; }
+            public double PageMagentaMlUsed { get; set; }
+            public double PageYellowMlUsed { get; set; }
+            public double PageBlackMlUsed { get; set; }
+            public double ColorPagesPerCartridge { get; set; }
+            public double CyanPagesPerCartridge { get; set; }
+            public double MagentaPagesPerCartridge { get; set; }
+            public double YellowPagesPerCartridge { get; set; }
+            public double BlackPagesPerCartridge { get; set; }
+        }
+
+        [Serializable()]
+        public class InkLevel
+        {
+            public string Id { get; set; }
+            public string LabelCode { get; set; }
+            public string SelectabilityNumber { get; set; }
+            public uint TotalImpressions { get; set; }
+            public uint DuplexSheets { get; set; }
+            public uint JamEvents { get; set; }
+            public uint MispickEvents { get; set; }
+            public string Color { get; set; }
+            public uint PEID { get; set; }
+            public uint Count { get; set; }
+            public string Type { get; set; }
+            public DateTime timestamp { get; set; }
+        }
+
+        public class ProductUsage
+        {
+            public uint TotalImpressions { get; set; }
+            public uint DuplexSheets { get; set; }
+            public uint JamEvents { get; set; }
+            public uint MispickEvents { get; set; }
+            public List<ConsumableSubUnit> Consumables { get; set; }
+        }
+        public class ConsumableSubUnit
+        {
+            public string MarkerColor { get; set; }
+            public List<MarkingAgent> Agent { get; set; }
+        }
+        public class MarkingAgent
+        {
+            public uint PEID { get; set; }
+            public uint Count { get; set; }
+            public string Type { get; set; }
+        }
+        public class ConsumableInfo
+        {
+            public string ID { get; set; }
+            public string LabelCode { get; set; }
+            public string SelectabilityNumber { get; set; }
+        }
+
+        private void printerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PrinterConfig printerConfiguration = new PrinterConfig($"{selectedPrinter}",
+                                                         $"{outputFilePath}ProductUsageDyn.xml",
+                                                         $"{outputFilePath}ConsumableConfigDyn.xml",
+                                                         $"{outputFilePath}httpresponse.txt",
+                                                         Properties.Settings.Default.SWFWClientPath,
+                                                         $"{outputFilePath}");
+
+            if (printerConfiguration.ShowDialog() == DialogResult.OK)
+            {
+                Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+                config.AppSettings.Settings.Remove("SelectedPrinter");
+                config.AppSettings.Settings.Add("SelectedPrinter", printerConfiguration.SelectedPrinter);
+                config.AppSettings.Settings.Remove("OutputFilePath");
+                config.AppSettings.Settings.Add("OutputFilePath", printerConfiguration.PathToOutput);
+                config.Save(ConfigurationSaveMode.Modified);
+                selectedPrinter = config.AppSettings.Settings["SelectedPrinter"].Value;
+                outputFilePath = config.AppSettings.Settings["OutputFilePath"].Value;
+            }
+        }
+
+        private void costToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            double colorCartridgeCost = 0;// Properties.Settings.Default.ColorCartridgeCost;
+            double.TryParse(ColorInkCartridgeCostTextBox.Text, out colorCartridgeCost);
+            double colorMl = Properties.Settings.Default.Color_ml;
+            double blackCartridgeCost = 0;// Properties.Settings.Default.ColorCartridgeCost;
+            double.TryParse(BlackInkCartridgeCostTextBox.Text, out blackCartridgeCost);
+            double blackMl = Properties.Settings.Default.Black_ml;
+
+            ConfigurationDialog dialog = new ConfigurationDialog(colorCartridgeCost.ToString(),
+                                                                    Properties.Settings.Default.Color_ml.ToString(),
+                                                                    blackCartridgeCost.ToString(),
+                                                                    Properties.Settings.Default.Black_ml.ToString());
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                double.TryParse(dialog.ColorCost, out colorCartridgeCost);
+                double.TryParse(dialog.ColorMl, out colorMl);
+                double.TryParse(dialog.BlackCost, out blackCartridgeCost);
+                double.TryParse(dialog.BlackMl, out blackMl);
+
+                Configuration config = ConfigurationManager.OpenExeConfiguration(Application.ExecutablePath);
+                config.AppSettings.Settings.Remove("ColorCartridgeCost");
+                config.AppSettings.Settings.Add("ColorCartridgeCost", colorCartridgeCost.ToString());
+                config.AppSettings.Settings.Remove("BlackCartridgeCost");
+                config.AppSettings.Settings.Add("BlackCartridgeCost", blackCartridgeCost.ToString());
+                config.Save(ConfigurationSaveMode.Modified);
+                ColorInkCartridgeCostTextBox.Text = config.AppSettings.Settings["ColorCartridgeCost"].Value;
+                BlackInkCartridgeCostTextBox.Text = config.AppSettings.Settings["BlackCartridgeCost"].Value;
+            }
+        }
+    }
+}

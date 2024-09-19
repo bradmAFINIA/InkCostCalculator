@@ -1,0 +1,78 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="InkCostCalculatorL501EnhancedWPF.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ColorConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="BlackConst3" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1E-09</Value>
+    </Setting>
+    <Setting Name="JobFileHeader" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Printer,Print Job,Number of Labels,Label Cyan Cost,Total Cyan Cost,Cyan ml Used,Pages per Cyan Cartridge,Label Magenta Cost,Total Magenta Cost,Magenta ml Used,Pages per Magenta Cartridge,Label Yellow Cost,Total Yellow Cost,Yellow ml Used,Pages per Yellow Cartridge,Label Black Cost,Total Black Cost,Black ml Used,Pages per Black Cartridge,Total Job Cost,Cost per Label</Value>
+    </Setting>
+    <Setting Name="Color_ml" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">26</Value>
+    </Setting>
+    <Setting Name="Black_ml" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">78.4</Value>
+    </Setting>
+    <Setting Name="ColorConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">7</Value>
+    </Setting>
+    <Setting Name="ColorConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="BlackConst1" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">10.5</Value>
+    </Setting>
+    <Setting Name="BlackConst2" Type="System.Double" Scope="Application">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
+    <Setting Name="ProductUsageDyn" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/DevMgmt/ProductUsageDyn.xml</Value>
+    </Setting>
+    <Setting Name="ConsumabeConfigDyn" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">/DevMgmt/ConsumableConfigDyn.xml</Value>
+    </Setting>
+    <Setting Name="RunningSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="StableSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">1</Value>
+    </Setting>
+    <Setting Name="StableConsecutive" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">3</Value>
+    </Setting>
+    <Setting Name="Use388" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="EnableCaptureLast" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IdleMilliSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">10000</Value>
+    </Setting>
+    <Setting Name="DelayMilliSeconds" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">15000</Value>
+    </Setting>
+    <Setting Name="AlignmentImage" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\alignmentImage.jpg</Value>
+    </Setting>
+    <Setting Name="AlignmentImageXSize" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="AlignmentImageYSize" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="SWFWClientPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\Afinia Label\Afinia 502 Label Printer\Ink Calculator\</Value>
+    </Setting>
+    <Setting Name="PrinterToolBoxPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\Afinia Label\Afinia 502 Label Printer\ToolBox 64-bit\</Value>
+    </Setting>
+    <Setting Name="L501PrinterToolBoxPath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\Program Files (x86)\Afinia Label\Afinia L501 Label Printer\Toolbox 64 bit\</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
