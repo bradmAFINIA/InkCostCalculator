@@ -80,8 +80,8 @@
             </DockPanel>
         </DockPanel>
         <TabControl HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="tabControl" SelectionChanged="TabControl_SelectionChanged" >
-            <TabItem Header="Cost Calculator" Visibility="Collapsed">
-                <Grid>
+            <TabItem Header="Cost Calculator" Visibility="Collapsed" >
+                <Grid Visibility="Collapsed">
                     <Button Name="ExportJobListButton" Height="23" Width="159" Click="ExportJobListButton_Click" Margin="50,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" >Export Job List</Button>
                     <Label Content="Color Cost" HorizontalAlignment="Left" Margin="240,5,0,0" VerticalAlignment="Top"/>
                     <TextBox Name ="ColorCostTextBox" HorizontalAlignment="Left" Height="23" Margin="310,5,0,0" TextWrapping="Wrap" Text="{Binding ColorCost}" VerticalAlignment="Top" Width="50" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" LostFocus="ColorCostTextBox_LostFocus" KeyDown="ColorCostTextBox_KeyDown" IsReadOnly="True" Background="{x:Null}" BorderBrush="{x:Null}"/>

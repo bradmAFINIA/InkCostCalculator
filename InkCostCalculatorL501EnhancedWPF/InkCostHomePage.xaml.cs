@@ -1111,9 +1111,12 @@ namespace InkCostCalculatorL501EnhancedWPF
                 ser.Close();
                 ser.PortName = (string)COMPortChooser.SelectedValue;
                 ser.Open();
-                ser.ResponseHandler = SetFirmwareVersionTextBox;
+                ser.ResponseHandler += SetFirmwareVersionTextBox;
                 ser.DataReceivedHandler = AddLog;
-                //ser.SendBasicCommand(AfiniaBasicCommand.FirmwareVersion);
+                ser.SendBasicCommand(AfiniaBasicCommand.FirmwareVersion);
+                Thread.Sleep(500);
+                ser.Close();
+                ser.Open();
                 //logger.Debug("ComPortChooser Changed: " + firmwareVersion);
                 //AerosolFanCheckbox.Checked -= AerosolFanCheckbox_Checked;
                 //AerosolFanCheckbox.IsChecked = true;
